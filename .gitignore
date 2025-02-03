@@ -1,10 +1,64 @@
-#Node.js dependencies
-frontend\node_modules
-frontend\build
+# ===========================
+# 🔹 General Git Ignore Rules
+# ===========================
 
-#Python depeendencies
-\backend\__pycache__
-\backend\venv
+# macOS system files
+.DS_Store
+.AppleDouble
+.LSOverride
 
-#Environment variables
+# Windows system files
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+# Ignore IDE-specific files (VS Code, JetBrains, etc.)
+.vscode/
+.idea/
+*.iml
+
+# ===========================
+# 🔹 Backend (Python & FastAPI)
+# ===========================
+
+# Ignore virtual environment
+venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignore environment variables
 .env
+
+# Ignore logs
+logs/
+*.log
+
+# Ignore compiled Python files
+*.pyc
+*.pyo
+*.pyd
+
+# ===========================
+# 🔹 Frontend (React.js)
+# ===========================
+
+# Ignore dependencies
+frontend/node_modules/
+
+# Ignore build files
+frontend/build/
+
+# Ignore cache
+frontend/.cache/
+
+# Ignore environment variables
+frontend/.env.local
+
+# ===========================
+# 🔹 Docker
+# ===========================
+
+# Ignore Docker cache files
+**/.dockerignore
+**/docker-compose.override.yml
