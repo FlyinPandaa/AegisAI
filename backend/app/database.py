@@ -20,15 +20,15 @@ def store_comments(flagged_comments):
     for comment in flagged_comments:
         try:
             # Ensure comment has necessary fields
-            if "text" not in comment or "flagged_categories" not in comment:
+            if "text" not in comment or "flagged_reason" not in comment:
                 print("Error: Comment missing required fields:", comment)
                 continue  # Skip storing invalid comments
 
             # Insert flagged comment into Supabase
             response = supabase_client.table("flagged_comments").insert({
-                "author": comment.get("author", "Unknown"),  # Default to "Unknown" if missing
+                "id": comment.get("id", "Unknown"),  # Default to "Unknown" if missing
                 "text": comment["text"],
-                "flagged_categories": str(comment["flagged_categories"]),  # Convert dict to string
+                "flagged_reason": str(comment["flagged_reason"]),  # Convert dict to string
                 "created_at": datetime.datetime.utcnow().isoformat()  # Timestamp
             }).execute()
 

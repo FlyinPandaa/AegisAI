@@ -1,8 +1,9 @@
 import os
 import time
+import redis
+import json
 from openai import OpenAI
 from dotenv import load_dotenv
-# import json
 
 # Explicitly load .env file
 load_dotenv(dotenv_path=".env")
@@ -13,16 +14,15 @@ SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY")
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-# openai.api_key = OPENAI_API_KEY
+redis_client = redis.Redis(host="redis", port=6379, db=0, decode_responses=True)
 
 # # Debugging: Print values to check if they load
     # print("Supabase URL:", SUPABASE_URL)
     # print("YouTube API Key:", YOUTUBE_API_KEY)
     # print("OpenAI API Key:", OPENAI_API_KEY)
 
-# Analyze comments using OpenAI's Moderation API and return flagged comments
+# Analyze comments using OpenAI's Moderation API, caches results in flagged comments, and return flagged comments
 def moderate_comments(comments):
-    """Analyzes comments with OpenAI Moderation API and returns flagged comments."""
 
     # Debugging: Print received comments before processing
     print("Received Comments for Moderation:", comments)
@@ -49,6 +49,22 @@ def moderate_comments(comments):
 
         while attempt < max_attempts:
             try:
+                cached_results = []
+                comments_to_process = []
+                
+                for comment in batch:
+                    cache_key = f"moderation:{comment['text']}"
+                    cached_result = redis_client.get(cache_key)
+                    
+                    if cached_result:
+                        print(f"Returning cached moderation results for: {comment['text']}")
+                        flagged_comments.append(json.loads(cached_result))
+                    else:
+                        comments_to_process.append(comment)
+                
+                if not comments_to_process:
+                    break
+                
                 # Ensure batch contains valid text data
                 batch_texts = [comment["text"] for comment in batch if isinstance(comment, dict) and "text" in comment]
 
@@ -65,21 +81,32 @@ def moderate_comments(comments):
                 # Debugging: Print OpenAI API response
                 print("OpenAI API Response:", response)
 
-                # Process batch results
-                for comment, result in zip(batch, response.results):
+                for comment, result in zip(comments_to_process, response.results):
                     if result.flagged:
-                        flagged_comments.append({
-                            "author": comment.get("author", "Unknown"),
+                        flagged_categories = ', '.join([key for key, value in result.categories.__dict__.items() if value])
+                        
+                        flagged_comment = {
+                            "id": comment.get("id", "Unknown"),
                             "text": comment["text"],
-                            "flagged_categories": result.categories
-                        })
+                            "flagged_reason": flagged_categories
+                        }
 
-                time.sleep(1)  # Add delay to reduce API call frequency
+                        # Store flagged comment in Redis for 1 hour (3600 seconds)
+                        redis_client.setex(f"moderation:{comment['text']}", 3600, json.dumps(flagged_comment))
+                        # Append flagged comments to the flagged_comment
+                        flagged_comments.append(flagged_comment)
+
+                time.sleep(2)  # Add delay to reduce API call frequency
                 break  # If successful, exit retry loop
 
             except Exception as e:
                 error_message = str(e)
                 print(f"Unexpected Error (Attempt {attempt+1}/{max_attempts}): {error_message}")
+
+                # If OpenAI credits exceeded
+                if "usage_limit_exceeded" in error_message or "insufficient_quota" in error_message:
+                    print("WARNING: You have run out of OpenAI credits!")
+                    return {"error": "OpenAI API quota exceeded. Please add more credits."}
 
                 # If rate limit error, apply exponential backoff
                 if "Too Many Requests" in error_message or "429" in error_message:
