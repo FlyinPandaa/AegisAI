@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  backend:
+    container_name: aegisai-backend
+    build: ./backend
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+
+  frontend:
+    container_name: aegisai-frontend
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+  redis:
+    image: redis:latest
+    container_name: redis-container
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: ["redis-server", "--appendonly", "yes"]
+
+volumes:
+  redis_data:
+    driver: local
