@@ -1,21 +1,26 @@
 version: '3.8'
 
 services:
-  backend:
+  aegisai-backend:
     container_name: aegisai-backend
     build: ./backend
     ports:
       - "8000:8000"
+    env_file:
+      - ./backend/.env
     depends_on:
       - redis
 
-  frontend:
+  aegisai-frontend:
     container_name: aegisai-frontend
     build: ./frontend
     ports:
       - "3000:3000"
+    environment:
+      - REACT_APP_API_BASE_URL=http://localhost:8000
     depends_on:
-      - backend
+      - aegisai-backend
+    
 
   redis:
     image: redis:latest

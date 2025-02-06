@@ -56,15 +56,22 @@ PandaWingz4567!
             - docker-compose -d build
         - To shut down:
             - docker-compose down
+    - Implemented testing to see if there is any major improvements using Redis for caching
+        - TLDR; A very small perfomance boost for running the same Youtube link through the OpenAI Moderation API
+        - Might be an issue with the moderation.py code, will have to come back to this later
         
-
 - [] Task 3: Attach frontend to backend
     - Didn't get to this step, but will work on this tomorrow
 
 ### 2/5/25
-- [] Task 3: Attach frontend to backend
-- [] Task 3: Attach frontend to backend
-- [] Task 3: Attach frontend to backend
+- [] Task 1: Attach frontend to backend
+    - Experienced issues with connecting to the API from the frontend
+        - Backend was working fine, but had to connect to LocalHost8000 to utilize the backend logic from the Frontend side
+    - Next ran into issues with not being able to display the table of flagged comments
+        - Later got fixed, by updating `handleSubmit` inside the Home.js file
+    - Another issue where the usernames of the Authors of the flagged comments aren't being displayed on the table
+        - Later fixed by ...
+- [] Task 2: Improve design of frontend
 
 ### 2/6/25
 
