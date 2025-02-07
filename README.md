@@ -1,6 +1,6 @@
 PandaShield45!67@
 
-Ubuntu:
+Ubuntu (WSL):
 michael_fang
 PandaWingz4567!
 
@@ -64,18 +64,30 @@ PandaWingz4567!
     - Didn't get to this step, but will work on this tomorrow
 
 ### 2/5/25
-- [] Task 1: Attach frontend to backend
+- [x] Task 1: Attach frontend to backend
     - Experienced issues with connecting to the API from the frontend
         - Backend was working fine, but had to connect to LocalHost8000 to utilize the backend logic from the Frontend side
     - Next ran into issues with not being able to display the table of flagged comments
         - Later got fixed, by updating `handleSubmit` inside the Home.js file
     - Another issue where the usernames of the Authors of the flagged comments aren't being displayed on the table
-        - Later fixed by ...
+        - Later fixed by changing what data was being accessed from `author` to `id`
+            - `<TableCell>{comment?.author || "Unknown"}</TableCell>` -> `<TableCell>{comment?.id || "Unknown"}</TableCell>`
 - [] Task 2: Improve design of frontend
+    - Didn't get to this task, will work on this on 2/6/25 
 
 ### 2/6/25
+- [x] Task 1: Improve design of frontend
+    - Take inspiration from Mobbin and create home page
+    - Ran into an issue with react-infinite-scroll-component not loading properly
+        - Had to ensure it was installed, and then manually input the package into the package.json file
+    - Will continue to work on frontend tomorrow
 
 ### 2/7/25
+- [] Task 1: Improve design of frontend pt2
+    - Add navigation bar
+    - 1 or 2 new pages
+- [] Task 2: Optimize moderation backend
+- [] Task 3: Add report button
 
 ### 2/8/25
 

@@ -1,0 +1,110 @@
+/* 🌌 Background */
+body {
+    background-color: #121212;
+    color: white;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    
+    /* 🔹 Light Grid Lines */
+    background-image: linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+    background-size: 80px 80px;
+}
+
+/* 🔹 Home Container */
+.home-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    text-align: center;
+}
+
+/* 🔹 Title Styling */
+.title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 3rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.title span {
+    font-weight: 400;
+    color: #bbb;
+}
+
+/* 🔹 Input Box */
+.input-container {
+    width: 100%;
+    max-width: 600px;
+    background-color: rgba(26, 25, 25, 0.1);
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    backdrop-filter: blur(10px);
+}
+
+/* 🔹 Text Input */
+.input-field {
+    flex-grow: 1;
+    background-color: rgb(141, 136, 136);
+    border-radius: 8px;
+    font-size: 1.2rem;
+    font-family: "Poppins", sans-serif;
+}
+
+/* 🔹 Analyze Button */
+.analyze-button {
+    background-color: white !important;
+    color: black !important;
+    font-size: 1rem !important;
+    font-weight: 600 !important;
+    border-radius: 8px !important;
+    padding: 12px 24px !important;
+    transition: 0.3s;
+}
+
+.analyze-button:hover {
+    background-color: #e0e0e0 !important;
+}
+
+/* 🔹 Loading Box */
+.loading-box {
+    margin-top: 20px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 🔹 Scrollable Comments Box */
+.comments-container {
+    margin-top: 20px;
+    width: 100%;
+    max-width: 700px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+/* 🔹 Infinite Scroll Loader */
+.loading-text {
+    text-align: center;
+    font-size: 1rem;
+    color: #e0e0e0;
+    margin-top: 10px;
+}
+
+/* 🔹 Table Scrollable Box */
+.scrollable-table {
+    max-height: 300px;
+    overflow-y: auto;
+}
