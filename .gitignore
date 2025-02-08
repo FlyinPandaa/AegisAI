@@ -45,7 +45,7 @@ logs/
 
 # Ignore dependencies
 frontend/node_modules/
-node_modules/
+/node_modules/
 
 # Ignore build files
 frontend/build/

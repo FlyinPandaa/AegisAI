@@ -1,0 +1,67 @@
+/* Ensure the header is full width */
+.header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between; /* Space out elements */
+    align-items: center;
+    padding: 20px 15px;
+    position: fixed;
+    top: 0;
+    background-color: black;
+    z-index: 1000;
+}
+
+/* Style the logo (AegisAI) */
+.navbar-logo {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #ff6b6b;
+    text-decoration: none;
+}
+
+.navbar {
+    display: flex;
+    gap: 40px; /* Space between links */
+    justify-content: center; /* Center the navigation links */
+    align-items: center;
+    font-size: 1.2rem;
+    font-family: "Poppins", sans-serif;
+    position: absolute; /* Allows precise positioning */
+    left: 50%;
+    transform: translateX(-50%); /* Centers it properly */
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Style for individual links */
+.navbar a {
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.3s ease-in-out;
+}
+
+.navbar a:hover {
+    color: #ff6b6b;
+}
+
+/* Get Started Button */
+.get-started-btn {
+    background-color: white;
+    color: black;
+    font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+    position: absolute; /* Keeps it positioned relative to the nav */
+    right: 60px; /* Move the button slightly left */
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.get-started-btn:hover {
+    background-color: #ff6b6b;
+    color: white;
+}

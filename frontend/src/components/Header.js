@@ -1,23 +1,17 @@
 import React from "react";
-import { AppBar, Toolbar, Typography, Button } from "@mui/material";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
+import "../styles/Navbar.css";
 
 const Header = () => {
     return (
-        <AppBar position ="static">
-            <Toolbar>
-                <Typography variant= "h6" style={{flexGrow: 1}}>
-                    AegisAI
-                </Typography>
-                <Button color="inherit" component={Link} to="/">
-                    Home
-                </Button>
-                <Button color="inherit" component={Link} to="/dashboard">
-                    Dashboard
-                </Button>
-            </Toolbar>
-        </AppBar>
+      <header className="header">
+        <nav className="navbar">
+          <Link to="/">Home</Link>
+          <Link to="/dashboard">Dashboard</Link>
+          <Link to="/about">About</Link>
+        </nav>
+      </header>
     );
-};
+  };
 
 export default Header;

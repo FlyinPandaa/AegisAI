@@ -1,0 +1,50 @@
+/* 🔹 NAVBAR STYLES */
+/* .navbar {
+    display: flex;
+    justify-content: space-between; /* Pushes items apart */
+    /* align-items: center;
+    padding: 16px 40px; /* Adjust padding */
+    /* background-color: black;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+  } */
+  
+  /* 🔹 NAVBAR LINKS */
+  /* .nav-links {
+    display: flex;
+    gap: 24px; /* Adjust spacing between Home, Dashboard, About */
+  /* } */
+  
+  /* .nav-links a {
+    text-decoration: none;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 500;
+    transition: color 0.3s ease;
+  } */
+  
+  /* .nav-links a:hover {
+    color: #ff6b6b; /* Highlight color on hover */
+  /* } */ 
+  
+  /* 🔹 GET STARTED BUTTON */
+  /* .get-started-btn {
+    background-color: white;
+    color: black;
+    font-size: 1rem;
+    font-weight: bold;
+    padding: 12px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    margin-right: 20px; /* Pull button closer */
+    /* transition: all 0.3s ease-in-out;
+  } */
+  
+  /* .get-started-btn:hover {
+    background-color: #ff6b6b;
+    color: white;
+  }
+   */
