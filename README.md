@@ -1,9 +1,3 @@
-PandaShield45!67@
-
-Ubuntu (WSL):
-michael_fang
-PandaWingz4567!
-
 # AegisAI 
 
 ## Introduction
