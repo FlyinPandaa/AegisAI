@@ -1,7 +1,13 @@
+# Imports
 import requests
 import os
+# Data
 import json
+# Caching
 import redis
+# Python's regular expressions module
+import re
+# Environments
 from dotenv import load_dotenv
 
 # Load .env file
@@ -19,20 +25,35 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
     # print("OpenAI API Key:", OPENAI_API_KEY)
 
 redis_client = redis.Redis(host="redis", port=6379, db=0, decode_responses=True)
-    
-# Extracts the video ID from a YouTube URL
+
 def extract_video_id(url):
-    if "youtube.com/watch?v=" in url:
-        return url.split("v=")[-1].split("&")[0]
-    elif "youtu.be/" in url:
-        return url.split("youtu.be/")[-1].split("?")[0]
-    elif "youtube.com/shorts/" in url:
-        return url.split("shorts/")[-1].split("?")[0]
-    return None
+    """Extracts the YouTube video ID from regular videos, Shorts, and youtu.be links"""
+    video_id = None
+
+    # Check for Shorts URL
+    shorts_match = re.search(r"youtube\.com/shorts/([a-zA-Z0-9_-]+)", url)
+    if shorts_match:
+        video_id = shorts_match.group(1)
+
+    # Check for regular YouTube video URL (watch?v=...)
+    regular_match = re.search(r"(?:v=|youtu\.be/)([a-zA-Z0-9_-]+)", url)
+    if regular_match:
+        video_id = regular_match.group(1)
+
+    # Check for shortened YouTube link (youtu.be/...)
+    if "youtu.be/" in url:
+        video_id = url.split("youtu.be/")[-1].split("?")[0]
+
+    if not video_id:
+        print("Error: Could not extract video_id from:", url)
+
+    return video_id
+
 
 def fetch_all_comments(video_url):
     """Fetches ALL YouTube comments using pagination (automatically)."""
     video_id = extract_video_id(video_url)
+    
     if not video_id:
         print("Error: Invalid YouTube URL")
         return {"comments": [], "message": "Invalid YouTube URL"}
@@ -71,12 +92,19 @@ def fetch_all_comments(video_url):
             comments = [
                 {
                     "id": item["snippet"]["topLevelComment"]["snippet"]["authorDisplayName"],
-                    "text": item["snippet"]["topLevelComment"]["snippet"]["textDisplay"]
+                    "text": item["snippet"]["topLevelComment"]["snippet"]["textDisplay"],
+                    "comment_id": item["snippet"]["topLevelComment"]["id"],  # Fetch comment_id
+                    "video_id": video_id  # Store extracted video_id
                 }
                 for item in items
             ]
 
+
             all_comments.extend(comments)  # Add comments to list
+            
+            # Debugging: Print comment id fetch
+            for comment in comments:
+                print(f"Extracted Comment ID: {comment['comment_id']} | Text: {comment['text']}")
 
             # Debugging: Print progress
             print(f"Fetched {len(comments)} comments, Total so far: {len(all_comments)}")

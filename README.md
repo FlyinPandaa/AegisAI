@@ -83,16 +83,26 @@ PandaWingz4567!
     - Will continue to work on frontend tomorrow
 
 ### 2/7/25
-- [] Task 1: Improve design of frontend pt2
+- [x] Task 1: Improve design of frontend pt2
     - Add navigation bar
-    - 1 or 2 new pages
-- [] Task 2: Optimize moderation backend
-- [] Task 3: Add report button
 
 ### 2/8/25
+- [] Task 1: Add report button
+- [] Task 2: Optimize moderation backend
+
+- Didn't work on AegisAI on 2/8/25
 
 
+### 2/9/25
+- [x] Task 1: Add report on YouTube button
+    - Ran into issue with fetching the correct commentID and the videoURL to send the link to the comment the user wants to report
+        - Solution was to create two new columns inside Supabase's tables
+        - Afterwards modify the backend to be able to fetch the both the `comment_id` and `video_id` of the flagged comments
+        - Then go back to frontend to modify the `generateYouTubeCommentLink` function to create the YouTube link that we will link as the href for the "Report on YouTube" button
+        - Additionally within the table, we needed to specify that we want each button to have the correct YouTube link that highlights the comment the user wants to report attached to the button
 
+### 2/10/25
+- [] Task 2: Optimize moderation backend
 
 # Future improvements
 - 
