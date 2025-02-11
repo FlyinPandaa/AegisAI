@@ -96,7 +96,13 @@
         - Additionally within the table, we needed to specify that we want each button to have the correct YouTube link that highlights the comment the user wants to report attached to the button
 
 ### 2/10/25
-- [] Task 2: Optimize moderation backend
+- [x] Task 1: Optimize moderation backend
+    - Increased minimum amount for batching comments to be sent to OpenAI's Moderation API. Reducing the amount of times the API is called
+    - Additionally decrease the time delay that was previously implemented (from 2 to 1)
+        - The time delay was used to  reduce the risk of the API throttling
+- [] Task 2: Test the performance increase from using Redis caching
+    - Ran into a connection error with the Redis server
+        - Currently don't have a solution to this error as of 2/10/25
 
 # Future improvements
 - 
