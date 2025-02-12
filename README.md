@@ -1,23 +1,74 @@
 # AegisAI 
 
-## Introduction
-- Introduce AegisAI
-- What is the problem?
-- How does AegisAI solves this?
+## Introduction :wave:
+AegisAI is a web application that streamlines moderating YouTube comments by flagging toxic and harmful comments 
+with just a YouTube link. Users can help make YouTube a safer community, by reporting flagged comments.
 
-## Project Archeticture
-- Explore what the archectivture of AegisAI
+## Table of Contents :scroll:
+- [Inspiration](#inspiration)
+- [Tech Stack](#tech-stack)
+- [Architecture](#architecture)
+- [Getting Started](#getting-started)
+- [Features](#features)
+- [APIs](#apis)
+- [Future of AegisAI](#future-of-aegisai)
+- [Author](#author)
 
-## Running Program
+## Inspiration :sparkles:
+Scrolling through social media, I was excited that a K-Pop group called LE SSERAFIM, was going to release their latest mini album, EASY. After the release of the album and the 'EASY' music video, it quickly became one of my favorite albums of 2024. Little did I know that there was a storm coming. 
+
+After LE SSERAFIM's stage at Coachella 2024, they received a lot of criticism for poor vocal perfomance. 
+It eventually led to a massive hate train on various social media platforms. Several weeks later, the hate train got 
+progressively worse. That's when LE SSERAFIM disabled their comment sections for their social media platforms. 
+Besides LE SSERAFIM, there are numerous K-Pop groups that also receive toxic or harmful comments. 
+I started brainstorming if there was something I can do to reduce the amount of toxic and harmful comments, and 
+that ultimately led me to AegisAI. I wanted to create a safer digital space where celebrities, content creators, brands/businesses, community members, and etc. are shielded from toxic and harmful comments.
+
+## Tech Stack :wrench:
+
+### Languages:
+- HTML
+- CSS
+- JS
+- Python
+
+### Frameworks:
+- React.js
+- MaterialUI
+- FastAPI
+
+### Technologies/Tools:
+- Git
+- Docker
+- Redis
+- Supabase
+
+## Architecture :computer:
+![Architecture V0](./frontend/public/AegisAI_ArchitectureV0.png)
+
+## Getting started (In-Progress) :rocket:
 - Walk user through running code on their machine
 
-## Thank you
-- Thank users
-- Insert a small About Me
-- Introduce YouTube channel
-- Drop socials and porfolio site
+## Features (In-Progress) :clipboard:
+- What features are there?
+- Moderation of YouTube comments
+- Can insert either a shorts or regular video
 
-## Updates/Tasks/Timeline
+## APIs (In-Progress) :ledger:
+- Moderation API
+- YouTube data v3
+- What calls can be seen in main.py
+
+## Future of AegisAI (In-Progress) :hammer:
+- Future improvements/plans?
+
+## Author (In-Progress) :panda_face:
+- Thank you
+- Insert a small About Me
+
+
+
+## Updates/Tasks/Timeline :calendar:
 
 ### 2/2/25
 - [x] Task 1: Start Repository
