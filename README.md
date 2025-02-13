@@ -110,18 +110,21 @@ There are a lot of improvements and new features I would like to implement to Ae
 
 ## Acknowledgements
 - **YouTube channels used for testing**
-    - ClearValue Tax
-    - Graham Stephan
-    - Seoulite TV
-    - MBCkpop
-    - IVE
+    - [ClearValue Tax](https://www.youtube.com/@clearvaluetax9382)
+    - [Graham Stephan](https://www.youtube.com/@GrahamStephan)
+    - [Seoulite TV](https://www.youtube.com/@seoulitetv)
+    - [MBCkpop](https://www.youtube.com/@MBCkpop)
+    - [IVE](https://www.youtube.com/@IVEstarship)
+
+- **Structure of README**
+    - Followed [David Kwan's](https://github.com/dwkwan/Lyrics_For_Learning) README structure
 
 ## Author :panda_face:
 
 Michael Fang is a recent graduate from University of California, Merced with a degree in Cognitive Science. 
 Passionate about solving real world problems with software, and eager to learn new skills to keep up with the ever-evolving technology field. 
 
-## Updates/Tasks/Timeline :calendar:
+## Updates/Tasks (Going to migrate to GitHub Projects):calendar:
 
 ### 2/2/25
 - [x] Task 1: Start Repository
