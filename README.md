@@ -4,7 +4,9 @@
 AegisAI is a web application that streamlines moderating YouTube comments by flagging toxic and harmful comments 
 with just a YouTube link. Users can help make YouTube a safer community, by reporting flagged comments.
 
-![AegisAI Demo](./frontend/Assets/AegisAI%20Demo.mp4)
+<!-- ![AegisAI Demo](./frontend/Assets/AegisAI%20Demo.mp4) -->
+
+[![Watch the video](https://raw.githubusercontent.com/FlyinPandaa/AegisAI/main/frontend/Assets/AegisAI_Home.png)](https://raw.githubusercontent.com/FlyinPandaa/AegisAI/main/frontend/Assets/AegisAI_Demo.mp4)
 
 ## Table of Contents :scroll:
 - [Inspiration](#inspiration-sparkles)
