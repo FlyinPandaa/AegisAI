@@ -1,14 +1,13 @@
 # AegisAI 
 
 ## Introduction :wave:
-AegisAI is a web application that streamlines moderating YouTube comments by flagging toxic and harmful comments 
-with just a YouTube link. Users can help make YouTube a safer community, by reporting flagged comments.
+AegisAI is a web application that streamlines moderating YouTube comments by flagging toxic and harmful comments with just a YouTube link. Users can help make YouTube a safer community, by reporting flagged comments.
 
 ---
 
 ### **Click thumbnail below for a demo video on YouTube!** :arrow_down:
 
-[![AegisAI V1 Demo](https://raw.githubusercontent.com/FlyinPandaa/AegisAI/main/frontend/Assets/AegisAI_Home.png)](https://www.youtube.com/watch?v=sy0-erU7Dwo)
+[![AegisAI V0 Demo](https://raw.githubusercontent.com/FlyinPandaa/AegisAI/main/frontend/Assets/AegisAI_Home.png)](https://www.youtube.com/watch?v=sy0-erU7Dwo)
 
 ## Table of Contents :scroll:
 - [Inspiration](#inspiration-sparkles)
@@ -76,6 +75,14 @@ that ultimately led me to AegisAI. I wanted to create a safer digital space wher
 - [OpenAI API Key](https://platform.openai.com/docs/overview)
     - Get API keys
     - Add API Key to `.env` file
+- `.env` file
+    - Add a `.env` file inside root folder of **backend** and **frontend**
+    - Inside the `.env` files:
+
+| Folder | Content |
+| ----------- | ----------- |
+| `backend` | `SUPABASE_URL`; `SUPABASE_KEY`; `OPENAI_API_KEY`; `YOUTUBE_API_KEY` |
+| `frontend` | `REACT_APP_API_BASE_URL` |
 
 **Launch program**
 
