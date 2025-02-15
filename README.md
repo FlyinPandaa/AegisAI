@@ -4,6 +4,8 @@
 AegisAI is a web application that streamlines moderating YouTube comments by flagging toxic and harmful comments 
 with just a YouTube link. Users can help make YouTube a safer community, by reporting flagged comments.
 
+![AegisAI Demo](./frontend/Assets/AegisAI%20Demo.mp4)
+
 ## Table of Contents :scroll:
 - [Inspiration](#inspiration-sparkles)
 - [Tech Stack](#tech-stack-wrench)
@@ -12,6 +14,7 @@ with just a YouTube link. Users can help make YouTube a safer community, by repo
 - [Features](#features-clipboard)
 - [APIs](#apis-ledger)
 - [Future of AegisAI](#future-of-aegisai-hammer)
+- [Acknowledgements](#acknowledgements-eyes)
 - [Author](#author-panda_face)
 
 ## Inspiration :sparkles:
@@ -20,6 +23,7 @@ Scrolling through social media, I was excited that a K-Pop group called LE SSERA
 After LE SSERAFIM's stage at Coachella 2024, they received a lot of criticism for poor vocal perfomance. 
 It eventually led to a massive hate train on various social media platforms. Several weeks later, the hate train got 
 progressively worse. That's when LE SSERAFIM disabled their comment sections for their social media platforms. 
+
 Besides LE SSERAFIM, there are numerous K-Pop groups that also receive toxic or harmful comments. 
 I started brainstorming if there was something I can do to reduce the amount of toxic and harmful comments, and 
 that ultimately led me to AegisAI. I wanted to create a safer digital space where celebrities, content creators, brands/businesses, community members, and etc. are shielded from toxic and harmful comments.
@@ -104,11 +108,12 @@ that ultimately led me to AegisAI. I wanted to create a safer digital space wher
 ## Future of AegisAI :hammer:
 There are a lot of improvements and new features I would like to implement to AegisAI in the future:
 - Populate About pages
+- Fetch comments from threads
 - Create User Authentication (Google and email)
 - Cross Platform capabilities (X and Reddit)
     - Instagram and TikTok might be difficult due to their Terms of Service, but I will have to find a workaround
 
-## Acknowledgements
+## Acknowledgements :eyes:
 - **YouTube channels used for testing**
     - [ClearValue Tax](https://www.youtube.com/@clearvaluetax9382)
     - [Graham Stephan](https://www.youtube.com/@GrahamStephan)

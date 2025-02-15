@@ -341,7 +341,6 @@ const Home = () => {
         }
     };
     
-    
 
     return (
         <Container className="home-container">
