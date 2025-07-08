@@ -50,76 +50,142 @@ def extract_video_id(url):
     return video_id
 
 
+# def fetch_all_comments(video_url):
+#     """Fetches ALL YouTube comments using pagination (automatically)."""
+#     video_id = extract_video_id(video_url)
+    
+#     if not video_id:
+#         print("Error: Invalid YouTube URL")
+#         return {"comments": [], "message": "Invalid YouTube URL"}
+    
+#     cached_comments = redis_client.get(f"youtube_comments:{video_id}")
+#     if cached_comments:
+#         print(f"Returning cached comments for video {video_id} from Redis")
+#         return json.loads(cached_comments)
+
+#     url = "https://www.googleapis.com/youtube/v3/commentThreads"
+#     params = {
+#         "part": "snippet",
+#         "videoId": video_id,
+#         "key": YOUTUBE_API_KEY,
+#         "maxResults": 50  # Fetch 50 comments per request
+#     }
+
+#     all_comments = []  # Store all retrieved comments
+#     next_page_token = None  # To keep track of pagination
+
+#     while True:
+#         if next_page_token:
+#             params["pageToken"] = next_page_token  # Use next page token if available
+
+#         response = requests.get(url, params=params)
+
+#         if response.status_code == 200:
+#             data = response.json()
+#             items = data.get("items", [])
+#             next_page_token = data.get("nextPageToken", None)  # Get next page token
+
+#             # Debugging: Print YouTube API response
+#             print("YouTube API Response:", data)
+
+#             # Extract comments from the response
+#             comments = [
+#                 {
+#                     # "id": item["snippet"]["topLevelComment"]["snippet"]["authorDisplayName"],
+#                     "text": item["snippet"]["topLevelComment"]["snippet"]["textDisplay"],
+#                     "comment_id": item["snippet"]["topLevelComment"]["id"],  # Fetch comment_id
+#                     "video_id": video_id  # Store extracted video_id
+#                 }
+#                 for item in items
+#             ]
+
+
+#             all_comments.extend(comments)  # Add comments to list
+            
+#             # Debugging: Print comment id fetch
+#             for comment in comments:
+#                 print(f"Extracted Comment ID: {comment['comment_id']} | Text: {comment['text']}")
+
+#             # Debugging: Print progress
+#             print(f"Fetched {len(comments)} comments, Total so far: {len(all_comments)}")
+
+#             # Stop if there are no more pages left
+#             if not next_page_token:
+#                 break
+#         else:
+#             print("Error fetching YouTube comments:", response.status_code, response.text)
+#             return {"comments": [], "message": "Error fetching comments"}
+        
+#     redis_client.setex(f"youtube_comments:{video_id}", 3600, json.dumps(all_comments))
+#     print(f"Cached comments for video {video_id} in Redis")
+
+#     # Debugging: Print final comments before returning
+#     print("Final Retrieved Comments:", all_comments)
+#     return all_comments  # Always return a LIST, not a dictionary
+
 def fetch_all_comments(video_url):
-    """Fetches ALL YouTube comments using pagination (automatically)."""
+    """Fetches all YouTube comments using pagination (always returns a list)."""
     video_id = extract_video_id(video_url)
     
     if not video_id:
         print("Error: Invalid YouTube URL")
-        return {"comments": [], "message": "Invalid YouTube URL"}
+        return []  # Always a list
     
-    cached_comments = redis_client.get(f"youtube_comments:{video_id}")
-    if cached_comments:
+    cache_key = f"youtube_comments:{video_id}"
+    cached = redis_client.get(cache_key)
+    if cached:
         print(f"Returning cached comments for video {video_id} from Redis")
-        return json.loads(cached_comments)
-
+        return json.loads(cached)  # List
+    
     url = "https://www.googleapis.com/youtube/v3/commentThreads"
     params = {
-        "part": "snippet",
-        "videoId": video_id,
-        "key": YOUTUBE_API_KEY,
-        "maxResults": 50  # Fetch 50 comments per request
+        "part":       "snippet",
+        "videoId":    video_id,
+        "key":        YOUTUBE_API_KEY,
+        "maxResults": 50
     }
 
-    all_comments = []  # Store all retrieved comments
-    next_page_token = None  # To keep track of pagination
+    all_comments = []
+    next_page_token = None
 
     while True:
         if next_page_token:
-            params["pageToken"] = next_page_token  # Use next page token if available
+            params["pageToken"] = next_page_token
 
         response = requests.get(url, params=params)
-
-        if response.status_code == 200:
-            data = response.json()
-            items = data.get("items", [])
-            next_page_token = data.get("nextPageToken", None)  # Get next page token
-
-            # Debugging: Print YouTube API response
-            print("YouTube API Response:", data)
-
-            # Extract comments from the response
-            comments = [
-                {
-                    "id": item["snippet"]["topLevelComment"]["snippet"]["authorDisplayName"],
-                    "text": item["snippet"]["topLevelComment"]["snippet"]["textDisplay"],
-                    "comment_id": item["snippet"]["topLevelComment"]["id"],  # Fetch comment_id
-                    "video_id": video_id  # Store extracted video_id
-                }
-                for item in items
-            ]
-
-
-            all_comments.extend(comments)  # Add comments to list
-            
-            # Debugging: Print comment id fetch
-            for comment in comments:
-                print(f"Extracted Comment ID: {comment['comment_id']} | Text: {comment['text']}")
-
-            # Debugging: Print progress
-            print(f"Fetched {len(comments)} comments, Total so far: {len(all_comments)}")
-
-            # Stop if there are no more pages left
-            if not next_page_token:
-                break
-        else:
+        if response.status_code != 200:
             print("Error fetching YouTube comments:", response.status_code, response.text)
-            return {"comments": [], "message": "Error fetching comments"}
-        
-    redis_client.setex(f"youtube_comments:{video_id}", 3600, json.dumps(all_comments))
-    print(f"Cached comments for video {video_id} in Redis")
+            return []  # Unified return type
 
-    # Debugging: Print final comments before returning
+        data = response.json()
+        items = data.get("items", [])
+        next_page_token = data.get("nextPageToken")
+
+        comments = [
+            {
+                "author":     item["snippet"]["topLevelComment"]["snippet"]["authorDisplayName"],
+                "text":       item["snippet"]["topLevelComment"]["snippet"]["textDisplay"],
+                "comment_id": item["snippet"]["topLevelComment"]["id"],
+                "video_id":   video_id
+            }
+            for item in items
+        ]
+        all_comments.extend(comments)
+
+        # Debug logging
+        for c in comments:
+            print(f"Extracted Comment ID: {c['comment_id']} | Author: {c['author']}")
+
+        print(f"Fetched {len(comments)} comments, Total so far: {len(all_comments)}")
+
+        if not next_page_token:
+            break
+
+    # Cache and return list
+    redis_client.setex(cache_key, 3600, json.dumps(all_comments))
+    print(f"Cached comments for video {video_id} in Redis")
     print("Final Retrieved Comments:", all_comments)
-    return all_comments  # Always return a LIST, not a dictionary
+
+    return all_comments
+
 

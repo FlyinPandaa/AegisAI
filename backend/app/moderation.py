@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 # Explicitly load .env file
 load_dotenv(dotenv_path=".env")
 
+
 # Retrieve API keys
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
@@ -23,7 +24,8 @@ def is_high_risk(comment_text):
     """Determines if a comment is high-risk based on predefined keywords."""
     if not comment_text:
         return False
-    return any(word in comment_text.lower() for word in HIGH_RISK_KEYWORDS)
+    text_lower = comment_text.lower()
+    return any(word in text_lower for word in HIGH_RISK_KEYWORDS)
 
 # Efficient batching with reduced OpenAI API calls
 def moderate_comments(comments, video_id):
@@ -41,9 +43,8 @@ def moderate_comments(comments, video_id):
         return {"error": "Comment format is incorrect"}
 
     flagged_comments = []
-    batch_size = min(50, len(comments))  # Up to 50 comments at a time
 
-    comments_to_process = []
+    # comments_to_process = []
     high_risk_comments = []  # High-risk comments to prioritize
     low_risk_comments = []   # Process low-risk comments later
 
@@ -51,37 +52,50 @@ def moderate_comments(comments, video_id):
         if not isinstance(comment, dict) or "text" not in comment or "comment_id" not in comment:
             print("Skipping Invalid Comment Format:", comment)
             continue
+        
+        cache_key = f"moderation:{comment['comment_id']}"
+        cached = redis_client.get(cache_key)
+        # ← This check goes at the very top of your per-comment loop
+        if cached:
+            # we’ve already moderated this one (flagged or not), so skip it
+            mod_rec = json.loads(cached)
+            if mod_rec.ge("flagged"):
+                flagged_comments.append(mod_rec)
+            # Skip to next comment without re-calling API
+            continue
 
-        cache_key = f"moderation:{comment['text']}"
-        cached_result = redis_client.get(cache_key)
-
-        if cached_result:
-            print(f"Returning Cached Result for: {comment['text']}")
-            flagged_comments.append(json.loads(cached_result))
+        # if cached_result:
+        #     print(f"Returning Cached Result for: {comment['text']}")
+        #     flagged_comments.append(json.loads(cached_result))
+        # else: 
+        
+        if is_high_risk(comment["text"]):
+            high_risk_comments.append(comment)
         else:
-            if is_high_risk(comment["text"]):
-                high_risk_comments.append(comment)
-            else:
-                low_risk_comments.append(comment)
+            low_risk_comments.append(comment)
 
     # Combine priority first
     comments_to_process = high_risk_comments + low_risk_comments
+    
+    print(f"Processing {len(high_risk_comments)} High-Risk Comments First")
+    print(f"Processing {len(low_risk_comments)} Low-Risk Comments After")
 
+    # If all comments are cached, return any flagged ones immediately
     if not comments_to_process:
         print("All comments were cached. No API call needed.")
         return flagged_comments
 
-    print(f"Processing {len(high_risk_comments)} High-Risk Comments First")
-    print(f"Processing {len(low_risk_comments)} Low-Risk Comments After")
 
     # Process comments in batches
+    batch_size = min(50, len(comments))  # Up to 50 comments at a time
+    max_attempts = 5
+    
     for i in range(0, len(comments_to_process), batch_size):
         batch = comments_to_process[i:i + batch_size]
         batch_texts = [comment["text"] for comment in batch]
 
         attempt = 0
-        max_attempts = 5
-
+        
         while attempt < max_attempts:
             try:
                 # Send batch request to OpenAI Moderation API
@@ -91,26 +105,32 @@ def moderate_comments(comments, video_id):
                 )
 
                 print(f"OpenAI API Response for Batch {i//batch_size + 1}:", response)
+                
+                # # Skip comments we’ve already seen, flagged or not
+                # cached = redis_client.get(f"moderation:{comment['comment_id']}")
+                # if cached:
+                #     continue
 
                 for comment, result in zip(batch, response.results):
+                    # Build a full moderation record
+                    mod_rec = {
+                    "comment_id": comment["comment_id"],
+                    "text":       comment["text"],
+                    "flagged":    result.flagged,
+                    "categories": [
+                        k for k,v in result.categories.__dict__.items() if v
+                    ]
+                    }
+
+                    # Cache it so we never send this comment again
+                    cache_key = f"moderation:{mod_rec['comment_id']}"
+                    redis_client.setex(cache_key, 3600, json.dumps(mod_rec))
+
+                    # If it’s flagged, push it to the list we ultimately return/insert
                     if result.flagged:
-                        flagged_categories = ', '.join(
-                            [key for key, value in result.categories.__dict__.items() if value]
-                        )
-                        
-                        flagged_comment = {
-                            "id": comment.get("id", "Unknown"),
-                            "text": comment["text"],
-                            "flagged_reason": flagged_categories,
-                            "comment_id": comment.get("comment_id", "Unknown"),
-                            "video_id": video_id  
-                        }
+                        flagged_comments.append(mod_rec)
 
-                        # Cache result for future use (up to 1 hour)
-                        redis_client.setex(f"moderation:{comment['text']}", 3600, json.dumps(flagged_comment))
-                        flagged_comments.append(flagged_comment)
-
-                time.sleep(1)  # Reduce the risk of API throttling risk
+                time.sleep(2)  # Reduce the risk of API throttling risk
                 break  
 
             except Exception as e:

@@ -24,14 +24,26 @@ def store_comments(flagged_comments, video_id):
                 print("Error: Comment missing required fields:", comment)
                 continue  # Skip storing invalid comments
 
-            # Insert flagged comment into Supabase
+            # # Insert flagged comment into Supabase
+            # response = supabase_client.table("flagged_comments").insert({
+            #     "id": comment.get("id", "Unknown"),  # Default to "Unknown" if missing
+            #     "text": comment["text"],
+            #     "flagged_reason": str(comment["flagged_reason"]),  # Convert dict to string
+            #     "comment_id": comment["comment_id"],  # Save comment_id
+            #     "video_id": comment["video_id"],  # Save video_id
+            #     "created_at": datetime.datetime.utcnow().isoformat()  # Timestamp
+            # }).execute()
+            
+            # Assume comment is a dictionary that includes the necessary fields
             response = supabase_client.table("flagged_comments").insert({
-                "id": comment.get("id", "Unknown"),  # Default to "Unknown" if missing
-                "text": comment["text"],
-                "flagged_reason": str(comment["flagged_reason"]),  # Convert dict to string
-                "comment_id": comment["comment_id"],  # Save comment_id
-                "video_id": comment["video_id"],  # Save video_id
-                "created_at": datetime.datetime.utcnow().isoformat()  # Timestamp
+                "text": comment["text"],  # Required
+                "flagged_reason": comment["flagged_reason"],  # Pass as native list: ["hate", "violence"]
+                "comment_id": comment.get("comment_id"),  # Optional
+                "video_id": comment.get("video_id"),      # Optional
+                # Optional: include only if you want to override default
+                "platform": "youtube",  
+                # Optional: override created_at only if needed
+                "created_at": datetime.datetime.utcnow().isoformat()
             }).execute()
 
             # Debugging: Print the inserted data response

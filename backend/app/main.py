@@ -1,25 +1,54 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel  # Import BaseModel for request validation
-from app.comments import fetch_all_comments, extract_video_id
-from app.moderation import moderate_comments
-from app.database import store_comments, fetch_flagged_comments
+from .comments import fetch_all_comments, extract_video_id
+from .moderation import moderate_comments
+from .database import store_comments, fetch_flagged_comments
 
 app = FastAPI()
 
-# Enable CORS for Frontend (localhost:3000 or other origins)
+# Enable CORS for Frontend 
+
+# origins = [
+#     "http://localhost:3000",
+#     "http://127.0.0.1:3000",
+#     "https://localhost:3000",
+# ]
+
+# origins = ["*"]
+
+
+# app.add_middleware(
+#     CORSMiddleware,
+#     allow_origins=origins,      # or ["*"] during local development
+#     allow_credentials=True,
+#     allow_methods=["*"],
+#     allow_headers=["*"],
+# )
+
 app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  
-    allow_credentials=True,
-    allow_methods=["*"],  
-    allow_headers=["*"],  
+  CORSMiddleware,
+  allow_origins=["*"],     # allow every origin
+  allow_methods=["*"],
+  allow_headers=["*"],
 )
 
 # Define Expected Request Body for Video URL
 class VideoRequest(BaseModel):
     video_url: str
 
+# Check websocket
+@app.websocket("/ws")
+async def websocket_endpoint(ws: WebSocket):
+    await ws.accept()
+    try:
+        while True:
+            msg = await ws.receive_text()
+            # echo or push your moderation updates here
+            await ws.send_text(f"Server got: {msg}")
+    except WebSocketDisconnect:
+        print("Client disconnected")
+        
 # Health check to confirm backend is running properly
 @app.get("/")
 async def root():

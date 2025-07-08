@@ -223,6 +223,7 @@
 
 
 import React, { useState, useEffect } from "react";
+import { openSocket } from "../utils/socket";
 import { TextField, Button, Container, Box, CircularProgress, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
 import { fetchComments, moderateComments } from "../api";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -233,6 +234,7 @@ const Home = () => {
     const [url, setUrl] = useState("");
     const [flaggedComments, setFlaggedComments] = useState([]);
     const [visibleComments, setVisibleComments] = useState([]);
+    const [messages, setMessages] = useState([]);
     const [hasMore, setHasMore] = useState(true);
     const [loading, setLoading] = useState(false);
 
@@ -245,6 +247,21 @@ const Home = () => {
         setVisibleComments(flaggedComments.slice(0, 10));
         setHasMore(flaggedComments.length > 10);
     }, [flaggedComments]);
+
+    const WS_URL = process.env.REACT_APP_WS_URL || "ws://localhost:8000/ws";
+    const socket = new WebSocket(WS_URL);
+
+    // Websocket
+    useEffect(() => {
+
+        const socket = openSocket(
+            (e) => setMessages((ms) => [...ms, e.data]),
+            () => console.log("connected"),
+            () => console.log("disconnected"),
+            (err) => console.error(err)
+        );
+        return () => socket.close();
+    }, []);
 
     const handleSubmit = async () => {
         console.log("URL Submitted:", url);
