@@ -59,7 +59,7 @@ def moderate_comments(comments, video_id):
         if cached:
             # we’ve already moderated this one (flagged or not), so skip it
             mod_rec = json.loads(cached)
-            if mod_rec.ge("flagged"):
+            if mod_rec.get("flagged"):
                 flagged_comments.append(mod_rec)
             # Skip to next comment without re-calling API
             continue
@@ -114,12 +114,12 @@ def moderate_comments(comments, video_id):
                 for comment, result in zip(batch, response.results):
                     # Build a full moderation record
                     mod_rec = {
-                    "comment_id": comment["comment_id"],
-                    "text":       comment["text"],
-                    "flagged":    result.flagged,
-                    "categories": [
-                        k for k,v in result.categories.__dict__.items() if v
-                    ]
+                        "comment_id":     comment["comment_id"],
+                        "text":           comment["text"],
+                        "flagged_reason": [k for k,v in result.categories.__dict__.items() if v],
+                        "author":         comment.get("author", "Unknown"),
+                        "video_id":       comment.get("video_id"),
+                        "report":         True 
                     }
 
                     # Cache it so we never send this comment again

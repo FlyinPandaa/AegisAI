@@ -410,7 +410,7 @@ const Home = () => {
                                         const isShort = url.includes("shorts"); // Detect Shorts
                                         return (
                                             <TableRow key={index}>
-                                                <TableCell>{comment?.id || "Unknown"}</TableCell>
+                                                <TableCell>{comment?.author || "Unknown"}</TableCell>
                                                 <TableCell>{comment?.text || "No text available"}</TableCell>
                                                 <TableCell>{comment?.flagged_reason || "Not specified"}</TableCell>
                                                 <TableCell>
