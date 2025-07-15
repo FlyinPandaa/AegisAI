@@ -1,6 +1,6 @@
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel  # Import BaseModel for request validation
+from pydantic import BaseModel
 from .comments import fetch_all_comments, extract_video_id
 from .moderation import moderate_comments
 from .database import store_comments, fetch_flagged_comments
